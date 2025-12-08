@@ -10,8 +10,8 @@ Dans notre contexte, nous cherchons à:
 - Maximiser la surveillance des zones sensibles
 - Respecter un budget limité
 - Limiter le nombre de caméras installées
-- Assurer la redondance pour les zones critiques
-- Distribuer les caméras de manière géographiquement équilibrée
+- Encourager la redondance pour les zones critiques
+- Éviter l'installation de caméras inutiles
 
 ## Notations
 
@@ -63,12 +63,12 @@ a_ij = 0  sinon
 **Maximiser:**
 
 ```
-Z = Σ(j∈J) p_j × w_j × y_j
+Z = Σ(j∈J) p_j × w_j × y_j + 0.1 × Σ(j∈J, p_j≥7) Σ(i∈I) p_j × w_j × a_ij × x_i
 ```
 
-Cette fonction maximise la couverture pondérée, où chaque zone contribue proportionnellement à:
-- Sa priorité (p_j): niveau de risque ou importance stratégique
-- Sa population (w_j): nombre de personnes ou densité
+Cette fonction maximise:
+1. La couverture pondérée des zones (priorité × population)
+2. Un bonus de redondance (10%) pour les zones critiques (priorité ≥ 7) couvertes par plusieurs caméras
 
 ### Contraintes
 
@@ -100,39 +100,15 @@ Une zone j ne peut être considérée comme couverte (y_j = 1) que si au moins u
 - Si aucune caméra ne couvre j: Σ a_ij × x_i = 0, donc y_j = 0
 - Si au moins une caméra couvre j: Σ a_ij × x_i ≥ 1, donc y_j peut être 1
 
-#### 4. Contraintes de Redondance (Zones Critiques)
-
-Pour les zones hautement prioritaires (p_j ≥ P_min):
+#### 4. Contrainte d'Utilité des Caméras
 
 ```
-Σ(i∈I) a_ij × x_i ≥ 2 × y_j    ∀j ∈ J : p_j ≥ P_min
+x_i = 0    ∀i ∈ I : Σ(j∈J) a_ij = 0
 ```
 
-Ces zones doivent être couvertes par au moins 2 caméras si elles sont couvertes, assurant ainsi la redondance pour les zones critiques.
+Une caméra ne peut être installée que si elle peut couvrir au moins une zone. Cela évite l'installation de caméras inutiles.
 
-#### 5. Contrainte de Diversité des Types de Caméras
-
-Définir I_PTZ ⊆ I comme l'ensemble des emplacements pour caméras PTZ.
-
-```
-Σ(i∈I_PTZ) x_i ≥ 0.3 × Σ(i∈I) x_i
-```
-
-Au moins 30% des caméras installées doivent être de type PTZ (Pan-Tilt-Zoom) pour assurer une flexibilité de surveillance.
-
-#### 6. Contraintes de Distribution Géographique
-
-Partitionner l'espace en C clusters géographiques: I = I_1 ∪ I_2 ∪ ... ∪ I_C
-
-Pour chaque cluster c:
-
-```
-Σ(i∈I_c) x_i ≤ max(2, ⌊K/3⌋)    ∀c ∈ {1, 2, ..., C}
-```
-
-Cette contrainte évite la concentration excessive de caméras dans une seule zone géographique.
-
-#### 7. Contraintes de Domaine
+#### 5. Contraintes de Domaine
 
 ```
 x_i ∈ {0, 1}    ∀i ∈ I
@@ -165,34 +141,29 @@ Sous contraintes:
 (C8)  y_j ∈ {0, 1}                                  ∀j ∈ J
 ```
 
-## Caractéristiques du Modèle
+## Modèle Complet Récapitulatif
 
-### Type de Problème
-- **Programmation Linéaire en Nombres Entiers (PLNE)**
-- **Binaire**: toutes les variables sont 0 ou 1
-- **NP-difficile**: temps de résolution peut croître exponentiellement
+```
+Maximiser:   Z = Σ(j∈J) p_j × w_j × y_j + 0.1 × Σ(j∈J, p_j≥7) Σ(i∈I) p_j × w_j × a_ij × x_i
 
-### Taille du Problème
+Sous contraintes:
 
-Pour un problème typique:
-- **|I| = 15**: 15 emplacements potentiels de caméras
-- **|J| = 20**: 20 zones à surveiller
-- **Variables**: 15 (x_i) + 20 (y_j) = 35 variables binaires
-- **Contraintes**: ~50-60 contraintes selon la configuration
+(C1)  Σ(i∈I) c_i × x_i ≤ B
 
-### Complexité
+(C2)  Σ(i∈I) x_i ≤ K
+
+(C3)  y_j ≤ Σ(i∈I) a_ij × x_i                     ∀j ∈ J
+
+(C4)  x_i = 0                                      ∀i : Σ(j∈J) a_ij = 0
+
+(C5)  x_i ∈ {0, 1}                                 ∀i ∈ I
 
 La complexité de ce modèle est enrichie par:
 
 1. **Multi-critères**: Fonction objectif pondérée (priorité × population)
 2. **Contraintes mixtes**: Contraintes de ressources ET de couverture
-3. **Redondance**: Contraintes de couverture multiple pour zones critiques
-4. **Clustering géographique**: Partition spatiale dynamique
-5. **Diversité technologique**: Contraintes sur les types d'équipements
-
-## Méthode de Résolution
-
-### Solveur: Gurobi Optimizer
+3. **Bonus de redondance**: Incitation à couvrir les zones critiques avec plusieurs caméras
+4. **Optimisation d'utilité**: Évite l'installation de caméras inutiles
 
 Gurobi utilise des algorithmes avancés:
 - **Branch-and-Bound**: Exploration de l'arbre de solutions

@@ -112,15 +112,15 @@ a_ij = 0  sinon
 
 ### 3.3 Fonction Objectif
 
-**Maximiser la couverture pondérée**:
+**Maximiser la couverture pondérée avec bonus de redondance**:
 
 ```
-Z = Σ(j=1 à n) p_j × w_j × y_j
+Z = Σ(j=1 à n) p_j × w_j × y_j + 0.1 × Σ(j∈J, p_j≥7) Σ(i∈I) p_j × w_j × a_ij × x_i
 ```
 
-Cette fonction maximise la somme des couvertures en prenant en compte:
-- La **priorité** de chaque zone (zones critiques = plus de poids)
-- La **population** de chaque zone (zones densément peuplées = plus importantes)
+Cette fonction maximise:
+1. La couverture pondérée (priorité × population)
+2. Un bonus de redondance (10%) pour les zones critiques couvertes par plusieurs caméras
 
 ### 3.4 Contraintes
 
@@ -142,23 +142,11 @@ y_j ≤ Σ(i=1 à m) a_ij × x_i    pour tout j
 ```
 Une zone n'est couverte que si au moins une caméra peut la surveiller.
 
-#### (C4) Contraintes de Redondance (Zones Critiques)
+#### (C4) Contrainte d'Utilité des Caméras
 ```
-Σ(i=1 à m) a_ij × x_i ≥ 2 × y_j    pour tout j avec p_j ≥ 5
+x_i = 0    pour tout i tel que Σ(j=1 à n) a_ij = 0
 ```
-Les zones hautement prioritaires doivent être couvertes par au moins 2 caméras.
-
-#### (C5) Contrainte de Diversité des Types
-```
-Σ(i∈PTZ) x_i ≥ 0.3 × Σ(i=1 à m) x_i
-```
-Au moins 30% des caméras doivent être de type PTZ (flexibilité).
-
-#### (C6) Contraintes de Distribution Géographique
-```
-Σ(i∈cluster_c) x_i ≤ max(2, K/3)    pour chaque cluster c
-```
-Évite la concentration excessive de caméras dans une zone.
+Une caméra ne peut être installée que si elle peut couvrir au moins une zone.
 
 ### 3.5 Modèle Complet
 
@@ -172,24 +160,22 @@ Sous contraintes:
     (C4) Σ a_ij × x_i ≥ 2×y_j            ∀j : p_j≥5
     (C5) Σ(PTZ) x_i ≥ 0.3 × Σ x_i
     (C6) Σ(cluster) x_i ≤ max(2, K/3)    ∀cluster
-    (C7) x_i ∈ {0,1}                      ∀i
-    (C8) y_j ∈ {0,1}                      ∀j
+### 3.5 Modèle Complet
+
+```
+Maximiser:   Z = Σ p_j × w_j × y_j + 0.1 × Σ(p_j≥7) Σ p_j × w_j × a_ij × x_i
+
+Sous contraintes:
+    (C1) Σ c_i × x_i ≤ B
+    (C2) Σ x_i ≤ K
+    (C3) y_j ≤ Σ a_ij × x_i              ∀j
+    (C4) x_i = 0                          ∀i : Σ a_ij = 0
+    (C5) x_i ∈ {0,1}                      ∀i
+    (C6) y_j ∈ {0,1}                      ∀j
 ```
 
 **Type**: Programmation Linéaire en Nombres Entiers (PLNE)  
-**Classe**: NP-difficile
-
----
-
-## 4. Architecture de l'Application
-
-### 4.1 Technologies Utilisées
-
-| Composant | Technologie | Version | Rôle |
-|-----------|-------------|---------|------|
-| Langage | Python | 3.8+ | Développement principal |
-| Solveur | Gurobi | 10.0+ | Optimisation PLNE |
-| Interface | PyQt5 | 5.15+ | Interface graphique |
+**Classe**: NP-difficile15+ | Interface graphique |
 | Visualisation | Matplotlib | 3.5+ | Graphiques et cartes |
 | Calcul numérique | NumPy | 1.21+ | Matrices et calculs |
 
