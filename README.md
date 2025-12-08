@@ -1,7 +1,6 @@
 # Couverture Maximale - Positionnement de Caméras de Surveillance
 
 **Projet de Recherche Opérationnelle - GL3 INSAT**  
-Enseignant: I. AJILI | Date: Décembre 2025
 
 ## Introduction
 
@@ -199,13 +198,14 @@ L'application offre plusieurs types de visualisations:
 
 ### Exemple de Résultats
 
-Configuration: 20 zones, 15 emplacements, budget 1M€, max 50 caméras
+Configuration: 20 zones, 15 emplacements, budget 50K, max 10 caméras
 
 **Solution obtenue**:
-- 11/15 caméras installées (4 ne couvrent aucune zone)
-- 12/20 zones couvertes (60%)
-- Zones critiques: redondance assurée
-- Temps de résolution: 2-5 secondes
+- Fonction objectif: 41100.0
+- 10/15 caméras installées (6 PTZ, 2 thermiques, 2 fixes)
+- 11/20 zones couvertes (55%)
+- Coût Total: 39500 (79.0% du budget)
+- Temps de résolution: 0.01s
 
 ### Visualisations
 
