@@ -21,8 +21,8 @@ import numpy as np
 import json
 from datetime import datetime
 
-from optimization_model import MaximalCoveringLocationModel
-from visualization import CoverageVisualizer
+from src.optimization_model import MaximalCoveringLocationModel
+from src.visualization import CoverageVisualizer
 
 
 class OptimizationThread(QThread):

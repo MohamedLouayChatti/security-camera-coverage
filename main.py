@@ -5,11 +5,7 @@ Lance l'interface graphique PyQt.
 
 import sys
 from PyQt5.QtWidgets import QApplication, QMessageBox
-
-try:
-    from src.main_window import MainWindow
-except ImportError:
-    from main_window import MainWindow
+from src.main_window import MainWindow
 
 
 def check_dependencies():
