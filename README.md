@@ -1,19 +1,19 @@
 # Couverture Maximale - Positionnement de Caméras de Surveillance
 
-## 📋 Description du Projet
+## Description du Projet
 
 Application d'optimisation pour résoudre le **Problème de Couverture Maximale (Maximal Covering Location Problem)** appliqué au **positionnement optimal de caméras de surveillance**.
 
 Ce projet utilise la **Programmation Linéaire en Nombres Entiers (PLNE)** avec le solveur **Gurobi** pour maximiser la couverture des zones à surveiller sous contraintes de budget et de nombre de caméras.
 
-### 🎯 Objectifs
+### Objectifs
 
 - Maximiser la couverture pondérée des zones (en fonction de leur priorité et population)
 - Optimiser l'allocation des ressources (budget limité, nombre de caméras)
 - Assurer la redondance pour les zones critiques
 - Distribuer géographiquement les caméras de manière équilibrée
 
-## 🏗️ Structure du Projet
+## Structure du Projet
 
 ```
 MaximalCoveringLocationProblem/
@@ -35,7 +35,7 @@ MaximalCoveringLocationProblem/
     └── rapport.md             # Rapport du projet
 ```
 
-## 📐 Modélisation Mathématique
+## Modélisation Mathématique
 
 ### Variables de Décision
 
@@ -79,7 +79,7 @@ MaximalCoveringLocationProblem/
    Σ x_i (par cluster géographique) ≤ max(2, N_cameras/3)
    ```
 
-## 🛠️ Paramètres du Problème
+## Paramètres du Problème
 
 ### Zones à Surveiller
 - **Position** (x, y): Coordonnées de la zone
@@ -98,7 +98,7 @@ MaximalCoveringLocationProblem/
 - **Nombre maximal de caméras**: Budget en équipements
 - **Budget maximal**: Contrainte financière totale
 
-## 🚀 Installation
+## Installation
 
 ### Prérequis
 
@@ -125,7 +125,7 @@ pip install -r requirements.txt
 - `matplotlib>=3.5.0` - Visualisations
 - `numpy>=1.21.0` - Calculs numériques
 
-## 💻 Utilisation
+## Utilisation
 
 ### Lancer l'Application
 
@@ -153,7 +153,7 @@ python main.py
    - Analyser les statistiques détaillées
    - Exporter la solution (JSON ou rapport TXT)
 
-## 📊 Visualisations
+## Visualisations
 
 L'application offre plusieurs types de visualisations:
 
@@ -176,7 +176,7 @@ L'application offre plusieurs types de visualisations:
 - Couverture par priorité
 - Tableau récapitulatif des performances
 
-## 📁 Format des Données
+## Format des Données
 
 ### Fichier JSON d'Entrée/Sortie
 
@@ -195,7 +195,7 @@ L'application offre plusieurs types de visualisations:
 }
 ```
 
-## 🧪 Exemple de Résultats
+## Exemple de Résultats
 
 Pour un problème avec:
 - 20 zones à surveiller
@@ -210,85 +210,29 @@ Pour un problème avec:
 - Utilisation du budget: 75-95%
 - Temps de résolution: 2-10 secondes
 
-## 🎓 Complexité et Évaluation
+## Complexité et Évaluation
 
 Ce projet intègre plusieurs niveaux de complexité pour maximiser l'évaluation:
 
 ### Complexité de la Modélisation
-✅ Modèle PLNE avec variables binaires  
-✅ Fonction objectif multi-critères (priorité × population)  
-✅ 6 types de contraintes différentes  
-✅ Contraintes de redondance pour zones critiques  
-✅ Contraintes de diversité de types de caméras  
-✅ Contraintes de distribution géographique  
+- Modèle PLNE avec variables binaires  
+- Fonction objectif multi-critères (priorité × population)  
+- 6 types de contraintes différentes  
+- Contraintes de redondance pour zones critiques  
+- Contraintes de diversité de types de caméras  
+- Contraintes de distribution géographique  
 
 ### Richesse des Paramètres
-✅ 5 attributs par zone (position, priorité, population, description)  
-✅ 6 attributs par caméra (position, coût, portée, angle, type)  
-✅ 3 types de caméras différents (fixe, PTZ, thermique)  
-✅ Calcul dynamique de la matrice de couverture  
-✅ Clustering géographique automatique  
+- 5 attributs par zone (position, priorité, population, description)  
+- 6 attributs par caméra (position, coût, portée, angle, type)  
+- 3 types de caméras différents (fixe, PTZ, thermique)  
+- Calcul dynamique de la matrice de couverture  
+- Clustering géographique automatique  
 
 ### Qualité de l'IHM
-✅ Interface PyQt professionnelle avec 3 onglets  
-✅ Threading (QThread) pour calculs non-bloquants  
-✅ Tables interactives pour saisie de données  
-✅ 3 types de visualisations Matplotlib  
-✅ Export JSON et rapports TXT  
-✅ Gestion d'erreurs et messages informatifs  
-
-## 👥 Équipe de Développement
-
-**Groupe**: [Votre numéro de groupe]  
-**Membres**:
-1. [Prénom Nom 1]
-2. [Prénom Nom 2]
-3. [Prénom Nom 3]
-4. [Prénom Nom 4]
-5. [Prénom Nom 5]
-
-**Institution**: Institut National des Sciences Appliquées et de Technologie (INSAT)  
-**Cours**: Recherche Opérationnelle (GL3)  
-**Enseignant**: I. AJILI  
-**Date**: Décembre 2025
-
-## 📚 Références
-
-1. Church, R., & ReVelle, C. (1974). "The maximal covering location problem"
-2. Gurobi Optimization - Documentation officielle
-3. PyQt5 Documentation
-4. Matplotlib Documentation
-
-## 📄 Licence
-
-Ce projet est réalisé dans un cadre académique pour l'INSAT.
-
-## 🐛 Résolution de Problèmes
-
-### Erreur: "No module named 'gurobipy'"
-```bash
-pip install gurobipy
-# Puis obtenir et activer une licence académique gratuite
-```
-
-### Erreur: "Model is infeasible"
-- Augmenter le budget maximal
-- Augmenter le nombre maximal de caméras
-- Réduire les portées requises
-
-### Interface ne se lance pas
-```bash
-# Vérifier l'installation de PyQt5
-pip install --upgrade PyQt5
-```
-
-## 📞 Support
-
-Pour toute question concernant ce projet:
-- Consulter la documentation dans `docs/`
-- Contacter l'équipe de développement
-- Voir l'enseignant durant les heures de TP
-
----
-
-**Bonne chance avec votre projet de Recherche Opérationnelle! 🎓🚀**
+- Interface PyQt professionnelle avec 3 onglets  
+- Threading (QThread) pour calculs non-bloquants  
+- Tables interactives pour saisie de données  
+- 3 types de visualisations Matplotlib  
+- Export JSON et rapports TXT  
+- Gestion d'erreurs et messages informatifs 
