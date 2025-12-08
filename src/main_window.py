@@ -41,7 +41,8 @@ class OptimizationThread(QThread):
         """Exécute l'optimisation dans un thread séparé."""
         try:
             self.progress.emit("Construction du modèle...")
-            success = self.model.build_model()
+            # Activer les diagnostics pour le débogage
+            success = self.model.build_model(enable_diagnostics=True)
             
             if not success:
                 self.finished.emit(False, {})

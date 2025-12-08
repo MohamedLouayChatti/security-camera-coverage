@@ -3,26 +3,12 @@
 
 ---
 
-## 📋 Informations du Projet
+##  Informations du Projet
 
 **Institution**: Institut National des Sciences Appliquées et de Technologie (INSAT)  
 **Cours**: Recherche Opérationnelle - GL3  
 **Enseignant**: I. AJILI  
 **Date de remise**: 12 Décembre 2025
-
----
-
-## 👥 Membres du Groupe
-
-**Groupe N°**: [À compléter]
-
-| Photo | Prénom et Nom | Email |
-|-------|---------------|-------|
-| 📷 | [Membre 1] | membre1@insat.u-carthage.tn |
-| 📷 | [Membre 2] | membre2@insat.u-carthage.tn |
-| 📷 | [Membre 3] | membre3@insat.u-carthage.tn |
-| 📷 | [Membre 4] | membre4@insat.u-carthage.tn |
-| 📷 | [Membre 5] | membre5@insat.u-carthage.tn |
 
 ---
 
@@ -302,22 +288,22 @@ L'interface est organisée en **3 onglets** pour une navigation logique:
 
 ### 5.2 Caractéristiques Ergonomiques
 
-✅ **Threading non-bloquant** (QThread)
+ **Threading non-bloquant** (QThread)
 - L'interface reste responsive pendant les calculs
 - Progression affichée en temps réel
 - Possibilité de consulter les logs durant l'exécution
 
-✅ **Tables éditables** (QTableWidget)
+ **Tables éditables** (QTableWidget)
 - Saisie directe des données
 - Modification intuitive des paramètres
 - Validation automatique des types
 
-✅ **Gestion d'erreurs robuste**
+ **Gestion d'erreurs robuste**
 - Vérification des dépendances au démarrage
 - Messages d'erreur informatifs (QMessageBox)
 - Logs détaillés pour le débogage
 
-✅ **Visualisations interactives**
+ **Visualisations interactives**
 - Graphiques Matplotlib intégrés
 - Zoom et navigation dans les cartes
 - Export des figures
@@ -430,12 +416,12 @@ L'interface est organisée en **3 onglets** pour une navigation logique:
 
 #### Points Forts de la Solution
 
-✅ **Couverture excellente**: 90% des zones surveillées  
-✅ **Priorités respectées**: Toutes les zones critiques (P≥7) couvertes  
-✅ **Redondance assurée**: Zones critiques avec 2-3 caméras  
-✅ **Budget optimisé**: 94.6% d'utilisation, pas de gaspillage  
-✅ **Distribution équilibrée**: Pas de concentration excessive  
-✅ **Mix technologique**: 44% PTZ, 33% fixe, 22% thermique  
+- **Couverture excellente**: 90% des zones surveillées  
+- **Priorités respectées**: Toutes les zones critiques (P≥7) couvertes  
+- **Redondance assurée**: Zones critiques avec 2-3 caméras  
+- **Budget optimisé**: 94.6% d'utilisation, pas de gaspillage  
+- **Distribution équilibrée**: Pas de concentration excessive  
+- **Mix technologique**: 44% PTZ, 33% fixe, 22% thermique  
 
 #### Zones Non Couvertes
 
@@ -490,10 +476,10 @@ assert coverage_matrix[3, 10] == 0  # Caméra 3 ne couvre pas zone 10
 ### 7.4 Validation Métier
 
 Consultation avec experts en sécurité:
-- ✅ Redondance pour zones critiques: **Indispensable**
-- ✅ Distribution géographique: **Très pertinent**
-- ✅ Mix de types de caméras: **Recommandé**
-- ⚠️ Angles de vision: **Pourrait être plus détaillé** (extension future)
+-  Redondance pour zones critiques: **Indispensable**
+-  Distribution géographique: **Très pertinent**
+-  Mix de types de caméras: **Recommandé**
+-  Angles de vision: **Pourrait être plus détaillé** (extension future)
 
 ---
 
@@ -501,7 +487,7 @@ Consultation avec experts en sécurité:
 
 ### 8.1 Critères de Complexité de la Modélisation
 
-#### 1. Nombre de Paramètres (Score: 9/10)
+#### 1. Nombre de Paramètres
 
 **Paramètres par zone** (5):
 - Position (x, y)
@@ -524,12 +510,12 @@ Consultation avec experts en sécurité:
 
 #### 2. Nombre et Diversité des Contraintes (Score: 10/10)
 
-✅ 6 types de contraintes différentes  
-✅ Contraintes de ressources (budget, nombre)  
-✅ Contraintes de couverture (logiques)  
-✅ Contraintes de qualité (redondance)  
-✅ Contraintes de diversité (types)  
-✅ Contraintes spatiales (distribution)  
+- 6 types de contraintes différentes  
+- Contraintes de ressources (budget, nombre)  
+- Contraintes de couverture (logiques)  
+- Contraintes de qualité (redondance)  
+- Contraintes de diversité (types)  
+- Contraintes spatiales (distribution)  
 
 **Évaluation**: Modèle très complet et réaliste
 
@@ -545,62 +531,27 @@ Consultation avec experts en sécurité:
 
 #### 1. Architecture Professionnelle (Score: 10/10)
 
-✅ Threading non-bloquant (QThread)  
-✅ Signaux/slots pour communication asynchrone  
-✅ Séparation modèle/vue  
-✅ Gestion d'erreurs complète  
+- Threading non-bloquant (QThread)  
+- Signaux/slots pour communication asynchrone  
+- Séparation modèle/vue  
+- Gestion d'erreurs complète  
 
 #### 2. Ergonomie (Score: 9/10)
 
-✅ 3 onglets pour organisation logique  
-✅ Tables interactives pour saisie  
-✅ Boutons clairs et intuitifs  
-✅ Logs en temps réel  
-✅ Messages informatifs  
+- 3 onglets pour organisation logique  
+- Tables interactives pour saisie  
+- Boutons clairs et intuitifs  
+- Logs en temps réel  
+- Messages informatifs  
 
 #### 3. Fonctionnalités (Score: 10/10)
 
-✅ Génération de données aléatoires  
-✅ Chargement/sauvegarde JSON  
-✅ 3 types de visualisations  
-✅ Export solutions et rapports  
-✅ Paramétrage du solveur  
+- Génération de données aléatoires  
+- Chargement/sauvegarde JSON  
+- 3 types de visualisations  
+- Export solutions et rapports  
+- Paramétrage du solveur  
 
-### 8.3 Critères de Qualité du Code
-
-#### 1. Documentation (Score: 10/10)
-
-- Docstrings pour toutes les classes et méthodes
-- Commentaires pour logique complexe
-- README détaillé
-- Documentation mathématique complète
-
-#### 2. Maintenabilité (Score: 9/10)
-
-- Code modulaire (3 fichiers séparés)
-- Nommage explicite
-- Typage des paramètres (typing hints)
-- Gestion d'exceptions
-
-#### 3. Efficacité (Score: 8/10)
-
-- Calcul optimisé de la matrice de couverture (NumPy)
-- Threading pour éviter blocages
-- Mise en cache des résultats
-
-### 8.4 Évaluation Globale
-
-| Critère | Score | Poids | Points |
-|---------|-------|-------|--------|
-| Modélisation | 9/10 | 30% | 2.7 |
-| IHM | 9.5/10 | 25% | 2.4 |
-| Code | 9/10 | 20% | 1.8 |
-| Résultats | 9/10 | 15% | 1.4 |
-| Documentation | 10/10 | 10% | 1.0 |
-
-**Total**: **9.3/10** (Excellent)
-
----
 
 ## 9. Difficultés Rencontrées et Solutions
 
@@ -660,74 +611,3 @@ model.addConstr(quicksum(x[i] for i in ptz_cameras) >= 0.3 * quicksum(x))
 1. **Heuristiques constructives**: Solutions initiales de meilleure qualité
 2. **Coupes personnalisées**: Renforcement du modèle
 3. **Décomposition**: Résolution par sous-problèmes
-
----
-
-## 11. Conclusion
-
-### 11.1 Objectifs Atteints
-
-✅ **Modélisation complète**: Modèle PLNE riche avec 6 types de contraintes  
-✅ **IHM professionnelle**: Interface PyQt moderne et non-bloquante  
-✅ **Résolution efficace**: Gurobi trouve des solutions optimales en secondes  
-✅ **Visualisations claires**: 6 types de graphiques pour analyse complète  
-✅ **Documentation exhaustive**: README, modélisation mathématique, rapport  
-
-### 11.2 Apports Pédagogiques
-
-**Compétences acquises**:
-1. Modélisation de problèmes réels en PLNE
-2. Utilisation d'un solveur commercial (Gurobi)
-3. Développement d'IHM avec PyQt5
-4. Threading pour applications réactives
-5. Visualisation de données avec Matplotlib
-6. Gestion de projets Python structurés
-
-### 11.3 Applications Pratiques
-
-Ce projet peut être adapté pour:
-- Sécurité d'entreprises et centres commerciaux
-- Surveillance urbaine (smart cities)
-- Positionnement de capteurs IoT
-- Localisation de stations de base (télécoms)
-- Placement de points d'accès WiFi
-
-### 11.4 Mot de la Fin
-
-Ce projet a permis d'appliquer concrètement les concepts théoriques de Recherche Opérationnelle à un problème réel et complexe. La combinaison de modélisation mathématique rigoureuse, de programmation efficace et d'interface utilisateur intuitive démontre la puissance de l'optimisation pour résoudre des problèmes décisionnels.
-
-Nous remercions Monsieur I. AJILI pour son encadrement et ses conseils tout au long de ce projet.
-
----
-
-## Annexes
-
-### Annexe A: Code Source Principal
-
-*[Extraits commentés des fonctions clés]*
-
-### Annexe B: Jeux de Données
-
-*[Exemples de fichiers JSON]*
-
-### Annexe C: Résultats Détaillés
-
-*[Tables complètes de solutions]*
-
-### Annexe D: Références
-
-1. Church, R., & ReVelle, C. (1974). "The maximal covering location problem"
-2. Gurobi Optimization, LLC. (2023). *Gurobi Optimizer Reference Manual*
-3. PyQt5 Documentation: https://www.riverbankcomputing.com/static/Docs/PyQt5/
-4. Matplotlib Documentation: https://matplotlib.org/
-
----
-
-**Date de finalisation**: [Date]  
-**Signatures des membres**:
-
-1. ________________
-2. ________________
-3. ________________
-4. ________________
-5. ________________

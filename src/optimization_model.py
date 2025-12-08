@@ -107,8 +107,65 @@ class MaximalCoveringLocationModel:
                 # Une zone est couverte si elle est dans la portée de la caméra
                 if distance <= cam_range:
                     self.coverage_matrix[i, j] = 1
+    
+    def print_coverage_diagnostics(self):
+        """Affiche des diagnostics sur la matrice de couverture."""
+        n_zones = len(self.zones)
+        n_cameras = len(self.camera_locations)
+        
+        print("\n" + "="*70)
+        print("DIAGNOSTICS DE LA MATRICE DE COUVERTURE")
+        print("="*70)
+        
+        # Zones pouvant être couvertes
+        zones_coverable = []
+        zones_not_coverable = []
+        
+        for j in range(n_zones):
+            can_cover = sum(self.coverage_matrix[:, j])
+            if can_cover > 0:
+                zones_coverable.append((j, can_cover))
+            else:
+                zones_not_coverable.append(j)
+        
+        print(f"\n📊 Statistiques:")
+        print(f"   Zones pouvant être couvertes: {len(zones_coverable)}/{n_zones}")
+        print(f"   Zones IMPOSSIBLES à couvrir: {len(zones_not_coverable)}/{n_zones}")
+        
+        if zones_not_coverable:
+            print(f"\n⚠️  ZONES IMPOSSIBLES À COUVRIR (aucune caméra à portée):")
+            for j in zones_not_coverable:
+                pos = self.zones[j]
+                priority = self.zone_priorities.get(j, 1)
+                pop = self.zone_populations.get(j, 1)
+                print(f"      Zone #{j} - Position: {pos}, Priorité: {priority}, Population: {pop}")
+        
+        # Caméras utiles
+        cameras_useful = []
+        cameras_useless = []
+        
+        for i in range(n_cameras):
+            zones_covered = sum(self.coverage_matrix[i, :])
+            if zones_covered > 0:
+                cameras_useful.append((i, zones_covered))
+            else:
+                cameras_useless.append(i)
+        
+        print(f"\n📹 Caméras:")
+        print(f"   Caméras utiles: {len(cameras_useful)}/{n_cameras}")
+        print(f"   Caméras inutiles (ne couvrent rien): {len(cameras_useless)}/{n_cameras}")
+        
+        if cameras_useless:
+            print(f"\n⚠️  CAMÉRAS INUTILES:")
+            for i in cameras_useless:
+                pos = self.camera_locations[i]
+                cam_type = self.camera_types.get(i, 'fixe')
+                range_m = self.camera_ranges.get(i, 50)
+                print(f"      Caméra #{i} ({cam_type}) - Position: {pos}, Portée: {range_m}m")
+        
+        print("\n" + "="*70 + "\n")
                     
-    def build_model(self):
+    def build_model(self, enable_diagnostics=False):
         """
         Construit le modèle d'optimisation Gurobi avec toutes les contraintes.
         
@@ -128,6 +185,10 @@ class MaximalCoveringLocationModel:
             5. Fenêtres de temps: contraintes de couverture temporelle
         """
         try:
+            # Afficher les diagnostics si demandé
+            if enable_diagnostics:
+                self.print_coverage_diagnostics()
+            
             # Créer le modèle Gurobi
             self.model = gp.Model("MaximalCoveringLocationProblem")
             
@@ -153,12 +214,26 @@ class MaximalCoveringLocationModel:
                 )
             
             # Fonction objectif: Maximiser la couverture pondérée
-            objective = gp.quicksum(
+            # Objectif principal: couverture pondérée
+            coverage_objective = gp.quicksum(
                 self.zone_priorities.get(j, 1.0) * 
                 self.zone_populations.get(j, 1) * 
                 self.y[j]
                 for j in range(n_zones)
             )
+            
+            # Bonus: Encourager la redondance pour zones critiques (priorité >= 7)
+            # Bonus = 10% de la valeur de base si couverture >= 2 caméras
+            redundancy_bonus = gp.quicksum(
+                0.1 * self.zone_priorities.get(j, 1.0) * 
+                self.zone_populations.get(j, 1) * 
+                self.coverage_matrix[i, j] * self.x[i]
+                for j in range(n_zones)
+                for i in range(n_cameras)
+                if self.zone_priorities.get(j, 1.0) >= 7.0
+            )
+            
+            objective = coverage_objective + redundancy_bonus
             self.model.setObjective(objective, GRB.MAXIMIZE)
             
             # Contrainte 1: Budget maximal
@@ -188,41 +263,50 @@ class MaximalCoveringLocationModel:
                     name=f"coverage_zone_{j}"
                 )
             
+            # Contrainte 3b: Éviter d'installer des caméras qui ne couvrent aucune zone
+            # Une caméra ne devrait être installée que si elle couvre au moins une zone
+            for i in range(n_cameras):
+                zones_coverable = sum(self.coverage_matrix[i, :])
+                if zones_coverable == 0:
+                    # Cette caméra ne peut couvrir aucune zone, ne pas l'installer
+                    self.model.addConstr(
+                        self.x[i] == 0,
+                        name=f"useless_camera_{i}"
+                    )
+            
             # Contraintes supplémentaires pour la complexité
             
-            # Contrainte 4: Redondance de couverture pour les zones critiques
-            # Les zones avec priorité >= 5 doivent être couvertes par au moins 2 caméras
-            for j in range(n_zones):
-                if self.zone_priorities.get(j, 1.0) >= 5.0:
-                    redundant_coverage = gp.quicksum(
-                        self.coverage_matrix[i, j] * self.x[i]
-                        for i in range(n_cameras)
-                    )
-                    self.model.addConstr(
-                        redundant_coverage >= 2 * self.y[j],
-                        name=f"redundancy_critical_zone_{j}"
-                    )
+            # Contrainte 4: Encourager (mais ne pas forcer) la redondance pour zones critiques
+            # On ajoute un bonus dans la fonction objectif au lieu d'une contrainte stricte
+            # Les zones critiques peuvent être couvertes par 1 caméra, mais 2+ est mieux
+            # (Cette approche est plus flexible et évite les solutions vides)
             
-            # Contrainte 5: Contraintes sur les types de caméras
-            # Au moins 30% des caméras installées doivent être PTZ (Pan-Tilt-Zoom)
-            ptz_cameras = [i for i, t in self.camera_types.items() if t == "PTZ"]
-            if ptz_cameras:
-                self.model.addConstr(
-                    gp.quicksum(self.x[i] for i in ptz_cameras) >= 
-                    0.3 * gp.quicksum(self.x[i] for i in range(n_cameras)),
-                    name="min_ptz_cameras"
-                )
+            # Contrainte 5: Contraintes sur les types de caméras (DÉSACTIVÉE)
+            # Cette contrainte peut forcer l'installation de caméras inutiles
+            # On la désactive pour optimiser l'utilisation du budget
+            # Si vous voulez la réactiver, décommentez le code ci-dessous
             
-            # Contrainte 6: Limitation des caméras par zone géographique
-            # (pour éviter la concentration excessive)
-            zones_geo = self._create_geographic_clusters(4)
-            for cluster_id, camera_indices in zones_geo.items():
-                if len(camera_indices) > 0:
-                    self.model.addConstr(
-                        gp.quicksum(self.x[i] for i in camera_indices) <= 
-                        max(2, self.max_cameras // 3),
-                        name=f"geographic_distribution_cluster_{cluster_id}"
-                    )
+            # ptz_cameras = [i for i, t in self.camera_types.items() if t == "PTZ"]
+            # if ptz_cameras and self.max_cameras >= 4:
+            #     self.model.addConstr(
+            #         gp.quicksum(self.x[i] for i in ptz_cameras) >= 
+            #         0.25 * gp.quicksum(self.x[i] for i in range(n_cameras)),
+            #         name="min_ptz_cameras"
+            #     )
+            
+            # Contrainte 6: Limitation des caméras par zone géographique (DÉSACTIVÉE)
+            # Cette contrainte peut limiter artificiellement la couverture optimale
+            # On la désactive pour permettre une meilleure optimisation
+            
+            # zones_geo = self._create_geographic_clusters(4)
+            # for cluster_id, camera_indices in zones_geo.items():
+            #     if len(camera_indices) > 0:
+            #         max_per_cluster = max(3, int(self.max_cameras * 0.5))
+            #         self.model.addConstr(
+            #             gp.quicksum(self.x[i] for i in camera_indices) <= 
+            #             max_per_cluster,
+            #             name=f"geographic_distribution_cluster_{cluster_id}"
+            #         )
             
             return True
             

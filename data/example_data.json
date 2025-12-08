@@ -1,6 +1,6 @@
 {
   "max_cameras": 10,
-  "max_budget": 50000,
+  "max_budget": 1000000,
   "zones": [
     [150.0, 200.0, 8, 700, "Zone commerciale principale"],
     [300.0, 400.0, 9, 800, "Entrée principale"],
