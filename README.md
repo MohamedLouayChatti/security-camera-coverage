@@ -64,6 +64,8 @@ Sous contraintes:
 (C1)  Σ(i∈I) c_i × x_i ≤ B                    [Budget]
 
 (C2)  Σ(i∈I) x_i ≤ K                          [Nombre de caméras]
+```
+
 ### Matrice de Couverture
 
 **Calcul de a_ij**:
